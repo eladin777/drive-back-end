@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace为命名空间，应该是mapper接口的全称-->
+<mapper namespace="com.loivgehoto.disk.Mapper.ChunkMapper">
+
+    <select id="saveChunk"><!--当上传一个新的文件和回收站里的文件重名,要怎么处理,待解决 INSERT INTO cloud_disk.file (file_id,file_name,file_path,create_time,file_size,user_name,suffix_name,in_folder) VALUES(#{file_id},#{file_name},#{file_path},#{create_time},#{file_size},#{user_name},#{suffix_name},#{in_folder})-->
+        INSERT INTO chunk (identifier,chunkNumber,user_name) VALUES(#{identifier},#{chunkNumber},#{user_name})
+    </select>
+
+    <select id="checkChunk" resultType="int">
+         SELECT chunkNumber FROM chunk WHERE identifier = #{identifier} and user_name=#{user_name}
+    </select>
+
+    <select id="delete_chunk_infor" resultType="int">
+        delete  FROM chunk WHERE identifier = #{identifier}
+    </select>
+
+</mapper>

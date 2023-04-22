@@ -1,0 +1,213 @@
+﻿
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Video</title>
+
+    <link rel="stylesheet" href="/css/buttons.css">
+
+<!--    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/css/all.css" rel="stylesheet">-->
+<!--    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">-->
+
+    <!--固定框架-->
+    <link rel='stylesheet' href='/css/bootstrap.min.css'>
+
+    <!--图标库-->
+    <link rel='stylesheet' href='/css/material-design-iconic-font.min.css'>
+    <link rel="stylesheet" href="/css/fontawesome-free-6.0.0-web/css/all.css" >
+
+    <!--核心样式-->
+    <link rel="stylesheet" href="/css/style.css">
+
+<!--    <script src="https:/code.jquery.com/jquery-3.2.1.min.js"></script>-->
+<!--    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>-->
+<!--    <script src="/jq/jquery.session.js"></script>-->
+<!--    <script src="https://cdn.bootcdn.net/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>-->
+
+    <!--    jquery-->
+    <script src="/jquery/jquery-3.6.0.js"></script>
+    <script src="/jquery/jquery.session.js"></script>
+    <script src="/jquery/jquery.cookie.js"></script>
+    <!--    jquery-->
+
+
+    <!--    bootstrap图标-->
+    <link rel="stylesheet" href="/icons-1.8.1/font/bootstrap-icons.css">
+    <!--    bootstrap图标-->
+
+<!--    &lt;!&ndash;    viewer.js图片查看器&ndash;&gt;-->
+<!--    <link  href="/viewerjs-1.10.4/dist/viewer.css" rel="stylesheet">-->
+<!--    <script src="/viewerjs-1.10.4/dist/viewer.js"></script>-->
+<!--    &lt;!&ndash;    viewer.js图片查看器&ndash;&gt;-->
+
+    <link href="/css/video-js.min.css" rel="stylesheet">
+    <script src="/jquery/video.min.js"></script>
+
+</head>
+
+<!--不再用$(document).ready(function()-->
+<body class="web-body">
+
+  <!-- Content -->
+  <div id="content">
+    <nav class="navbar navbar-default" id="topbar" style="border:0">
+      <div class="container-fluid">
+
+          <ul style="float: left" class="nav navbar-nav navbar-left">
+              <li>
+                  <a style="font-size: 25px;color: #868a87" th:text="${session.video_name}"></a>
+              </li>
+          </ul>
+
+
+        <ul class="nav navbar-nav navbar-right">
+
+          <li> <input type="checkbox" id="toggle-button">
+            <!--label中的for跟input的id绑定。作用是在点击label时选中input或者取消选中input-->
+            <label for="toggle-button" class="button-label">
+              <span class="circle"></span>
+              <span class="text on">白天</span>
+              <span class="text off">黑夜</span>
+            </label>
+          </li>
+
+          <li><a href="#" style="color: #ffffff" th:text="${session.name}"></a></li><!-- 右上角显示用户名-->
+          <li ><a style="color: #8b0cd0;font-family: Monospace;font-weight: 900;font-size: 20px"    href="#">VIP</a></li>
+        </ul>
+      </div>
+    </nav>
+
+      <div align="center" style="margin-top: 5%">
+          <video
+              id="my-player"
+              class="video-js vjs-big-play-centered"
+              controls
+              preload="auto"
+              poster=""
+              data-setup='{}'>
+          <source th:src="'/rootFolder/'+${session.video_path}"  type="video/mp4"></source>
+          <p class="vjs-no-js">
+              To view this video please enable JavaScript, and consider upgrading to a
+              web browser that
+              <a href="https://videojs.com/html5-video-support/" target="_blank">
+                  supports HTML5 video
+              </a>
+          </p>
+      </video>
+      </div>
+
+
+
+
+  </div>
+
+</div>
+
+
+<!--下面为黑夜模式对元素属性的控制-->
+<script type="text/javascript">
+
+    $('.button-label').click(function () {
+        if($('#toggle-button').prop('cheked'))//这个表示黑暗模式关闭
+        {
+
+            $.cookie('whitemode','false');
+
+            $('#content').css("background-image","url()");
+            $('#content').css("background-color","#1c1b1b");
+            $('.web-body').css("background-color","#1c1b1b");////滚动条背景色需从白色设置为主题色
+
+            $('.table-td').css("color","#989393");
+            $('.file_size_td').css("color","#989393");
+
+            $('.image-td').css("color","#569838");
+
+            $('#count').css("color","#989393");
+
+
+
+            //顶栏
+            $('#topbar').css("background-image","url()");
+            $('#topbar').css("background-color","#1c1b1b")
+
+
+            $('.file_icon').css("color","#58dc0f")
+            $('.folder_icon').css("color","#e7ef2b")
+
+
+
+            $('#sidebar').css("background-image","url()");
+            $('#sidebar').css("background-color","#262626")
+
+
+
+            $('#sidebar header').css("background-image","url()");
+            $('#sidebar header').css("background-color","#262626")
+
+
+
+            $('#toggle-button').prop("cheked",false);//必须要用这个设置选中状态，否则第二遍开关按钮会不起作用
+
+        }
+        else ///这个表示黑暗模式开启
+        {
+            $.cookie('whitemode','true');
+            $('.table-td').css("color","black");
+            $('.file_size_td').css("color","black");
+            $('.image-td').css("color","#59b730");
+            $('#count').css("color","black");
+
+            //顶栏
+            // $('#topbar').css("background-color","#ffffff");
+            $('#topbar').css("background-image","url(White-Paper-Texture-Background-520x390.webp)");
+
+            // $('#sidebar').css("background-color","#fdfdfd");
+            $('#sidebar').css("background-image","url(White-Paper-Texture-Background-520x390.webp)");
+
+
+            // $('#sidebar header').css("background-color","#ffffff");
+            $('#sidebar header').css("background-image","url(White-Paper-Texture-Background-520x390.webp)");
+
+            $('#content').css("background-image","url(White-Paper-Texture-Background-520x390.webp)");
+            $('#viewport').css("background-image","url(White-Paper-Texture-Background-520x390.webp)");
+
+            $('.web-body').css("background-color","#ffffff");
+
+            $('.file_icon').css("color","#5aa531");
+            $('.folder_icon').css("color","#d2cc14");
+
+
+            $('#toggle-button').prop("cheked",true);///必须要用这个设置选中状态，否则第二遍开关按钮会不起作用
+
+        }}
+    );
+
+
+
+    ///ready方法能正确地在页面加载后运行方法
+    $(document).ready(function ()
+    {
+        //-----↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓主题颜色切换时点击切换按钮后的动画过渡效果
+        if($.cookie('whitemode')=='true')
+        {
+            //  console.log(window.location.href);
+            $('.circle').addClass('disable_transition');
+            $('.web-body').addClass('disable_transition');
+            $('#sidebar').addClass('disable_transition');
+            $('#sidebar header').addClass('disable_transition');
+
+            $('.button-label').click();
+            $('.web-body').removeClass('disable_transition');
+            $('#sidebar').removeClass('disable_transition');
+            $('#sidebar header').removeClass('disable_transition');
+            $('.circle').removeClass('disable_transition');
+        }
+        //-----↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    });
+
+</script>
+
+</body>
+</html>

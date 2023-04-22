@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+<!--&lt;!&ndash;   必加！！ &ndash;&gt;-->
+<!--    <plugins>-->
+<!--        <plugin interceptor="com.github.pagehelper.PageInterceptor">-->
+<!--            &lt;!&ndash;分页参数合理化  &ndash;&gt;-->
+<!--            <property name="reasonable" value="true"/>-->
+<!--        </plugin>-->
+<!--    </plugins>-->
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/cloud_disk"/>
+
+
+<!--                在下面修改修改两行以适配windows和linux运行环境-->
+
+                <property name="username" value="root"/>
+                <property name="password" value="jesus777"/>
+
+<!--                <property name="username" value="loivgehoto"/>-->
+<!--                <property name="password" value="jesus777"/>-->
+
+
+<!--                在下面修改修改两行以适配windows和linux运行环境-->
+
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <mapper resource="UserMapper.xml"/>
+        <mapper resource="FileMapper.xml"/>
+        <mapper resource="ChunkMapper.xml"/>
+    </mappers>
+</configuration>

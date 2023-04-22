@@ -1,0 +1,254 @@
+﻿
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Disk</title>
+
+    <link rel="stylesheet" href="/css/buttons.css">
+
+<!--    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/css/all.css" rel="stylesheet">-->
+<!--    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">-->
+
+
+    <!--    <link rel="stylesheet" href="/css/jquery.fileupload-ui.css">-->
+    <!--    <link rel="stylesheet" href="/css/jquery.fileupload.css">-->
+    <!--    <script src="/js/vendor/jquery.ui.widget.js"></script>-->
+    <!--    <script src="/js/jquery.iframe-transport.js"></script>-->
+    <!--    <script src="/js/jquery.fileupload.js"></script>-->
+    <!--上传进度条-->
+
+
+    <!--固定框架-->
+    <link rel='stylesheet' href='/css/bootstrap.min.css'>
+
+    <!--图标库-->
+    <link rel='stylesheet' href='/css/material-design-iconic-font.min.css'>
+    <link rel="stylesheet" href="/css/fontawesome-free-6.0.0-web/css/all.css" >
+
+    <!--核心样式-->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!--    jquery-->
+    <script src="/jquery/jquery-3.6.0.js"></script>
+    <script src="/jquery/jquery.session.js"></script>
+    <script src="/jquery/jquery.cookie.js"></script>
+    <!--    jquery-->
+
+    <!--    bootstrap图标-->
+    <link rel="stylesheet" href="/icons-1.8.1/font/bootstrap-icons.css">
+    <!--    bootstrap图标-->
+
+
+    <!--    viewer.js图片查看器-->
+    <link  href="/viewerjs-1.10.4/dist/viewer.css" rel="stylesheet">
+    <script src="/viewerjs-1.10.4/dist/viewer.js"></script>
+    <!--    viewer.js图片查看器-->
+
+
+    <link href="/css/video-js.min.css" rel="stylesheet">
+    <script src="/jq/video.min.js"></script>
+
+
+</head>
+
+<!--不再用$(document).ready(function()-->
+<body class="web-body" onload="load()">
+
+    <!-- Content -->
+    <div id="content">
+        <nav class="navbar navbar-default" id="topbar" style="border: 0">
+            <div class="container-fluid">
+
+<!--                <ul style="float: left" class="nav navbar-nav navbar-left">-->
+<!--                    <li>-->
+<!--                        <a href="http://loivgehoto.com:8080" style="font-size: 25px;color: #ffffff">loivgehoto cloud disk</a>-->
+<!--                    </li>-->
+<!--                </ul>-->
+
+
+
+
+                <ul class="nav navbar-nav navbar-right" style="margin-right: 10%">
+
+                    <li> <input type="checkbox" id="toggle-button">
+                        <!--label中的for跟input的id绑定。作用是在点击label时选中input或者取消选中input-->
+                        <label for="toggle-button" class="button-label">
+                            <span class="circle"></span>
+                            <span class="text on">白天</span>
+                            <span class="text off">黑夜</span>
+                        </label>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+
+        <div style="margin-top: 0%">
+            <span style="color: #72ea7c;font-size: 30px;position: relative;float:left;left: 15%" th:text="${share_file.user_name}+'的分享'"></span>
+            <span style="color: #4cd055;font-size: 15px;position: relative;float: left;left: 16%;margin-top: 18px" th:text="'大小:'+${share_file.file_size}+'kb'"></span>
+            <a th:href="'/download?file_path='+${share_file.file_path}" style="float: right;margin-right: 20%;font-size: 25px"  class="btn download" ><i class="bi bi-download"></i>下载</a>
+        </div>
+
+        <div style="text-align: center;margin-top: 15%">
+
+            <td class="file_icon" th:if="${share_file.suffix!='jpg' and share_file.suffix!='png' and share_file.suffix!='jpeg' and share_file.suffix!='bmp' and share_file.suffix!='png' and share_file.suffix!='gif' and share_file.suffix!='doc' and share_file.suffix!='docx' and share_file.suffix!='folder' and share_file.suffix!='txt' and share_file.suffix!='ini' and share_file.suffix!='xml'
+           and share_file.suffix!='mp3'and share_file.suffix!='wma'and share_file.suffix!='wav'and share_file.suffix!='ape'and share_file.suffix!='flac' and share_file.suffix!='mp4'and share_file.suffix!='mov'and share_file.suffix!='avi'and share_file.suffix!='flv'and share_file.suffix!='wmv'and share_file.suffix!='mpeg'and share_file.suffix!='mkv'
+           and share_file.suffix!='rar'and share_file.suffix!='zip'and share_file.suffix!='tar'and share_file.suffix!='7z'  }">
+                <i class="bi bi-file-earmark" style="position: relative;font-size: 200px;color: #90f199"></i>
+
+
+            <td class="file_icon"  th:if="${share_file.suffix=='jpg'||share_file.suffix=='png'||share_file.suffix=='jpeg'||share_file.suffix=='bmp'|| share_file.suffix=='png'||share_file.suffix=='gif'}"><i class="bi bi-image" style="position: relative;font-size: 200px;color: #90f199"></i></td>
+
+            <td class="file_icon"  th:if="${share_file.suffix=='doc'||share_file.suffix=='docx'}"><i class="bi bi-file-earmark-word" style="position: relative;font-size: 200px;color: #90f199"></i></td>
+
+            <td class="file_icon"  th:if="${share_file.suffix=='folder'}"><i class="bi bi-folder" style="position: relative;font-size: 200px;color: #90f199"></i></td>
+
+            <td class="file_icon"  th:if="${share_file.suffix=='txt'||share_file.suffix=='ini'||share_file.suffix=='xml' }"><i class="bi bi-file-earmark-text" style="position: relative;font-size: 200px;color: #90f199"></i></td>
+
+            <td class="file_icon"  th:if="${share_file.suffix=='mp3'||share_file.suffix=='wma'||share_file.suffix=='wav'||share_file.suffix=='ape'||share_file.suffix=='flac' }"><i class="bi bi-file-earmark-music" style="position: relative;font-size: 200px;color: #90f199"></i></td>
+
+            <td class="file_icon"  th:if="${share_file.suffix=='mp4'||share_file.suffix=='mov'||share_file.suffix=='avi'||share_file.suffix=='flv'||share_file.suffix=='wmv'||share_file.suffix=='mpeg'||share_file.suffix=='mkv'}"><i class="bi bi-file-earmark-play" style="position: relative;font-size: 200px;color: #90f199"></i></td>
+
+            <td class="file_icon"  th:if="${share_file.suffix=='rar'||share_file.suffix=='zip'||share_file.suffix=='tar'||share_file.suffix=='7z'}"><i class="bi bi-file-earmark-zip-fill" style="position: relative;font-size: 200px;color: #90f199"></i></td>
+
+
+
+
+            <br>
+                <span style="color: #72ea7c;font-size: 25px;position: relative;"  th:text="${share_file.file_name}"></span>
+        </div>
+
+<!--        th:href="'/download?fileName='+${file.file_name}"-->
+    </div>
+
+
+</div>
+</body>
+
+
+<script type="text/javascript">
+
+    $('.button-label').click(function () {
+        if($('#toggle-button').prop('cheked'))//这个表示黑暗模式关闭
+        {
+
+            $.cookie('whitemode','false');
+
+            $('#content').css("background-image","url()");
+            $('#content').css("background-color","#1c1b1b");
+            $('.web-body').css("background-color","#1c1b1b");////滚动条背景色需从白色设置为主题色
+
+            $('.table-td').css("color","#989393");
+            $('.file_size_td').css("color","#989393");
+
+            $('.image-td').css("color","#569838");
+
+            $('#count').css("color","#989393");
+
+
+
+            //顶栏
+            $('#topbar').css("background-image","url()");
+            $('#topbar').css("background-color","#1c1b1b")
+
+
+            $('.file_icon').css("color","#58dc0f")
+            $('.folder_icon').css("color","#e7ef2b")
+
+
+
+            $('#sidebar').css("background-image","url()");
+            $('#sidebar').css("background-color","#262626")
+
+
+
+            $('#sidebar header').css("background-image","url()");
+            $('#sidebar header').css("background-color","#262626")
+
+
+
+            $('#toggle-button').prop("cheked",false);//必须要用这个设置选中状态，否则第二遍开关按钮会不起作用
+
+        }
+        else ///这个表示黑暗模式开启
+        {
+            $.cookie('whitemode','true');
+            $('.table-td').css("color","black");
+            $('.file_size_td').css("color","black");
+            $('.image-td').css("color","#59b730");
+            $('#count').css("color","black");
+
+            //顶栏
+            // $('#topbar').css("background-color","#ffffff");
+            $('#topbar').css("background-image","url(White-Paper-Texture-Background-520x390.webp)");
+
+            // $('#sidebar').css("background-color","#fdfdfd");
+            $('#sidebar').css("background-image","url(White-Paper-Texture-Background-520x390.webp)");
+
+
+            // $('#sidebar header').css("background-color","#ffffff");
+            $('#sidebar header').css("background-image","url(White-Paper-Texture-Background-520x390.webp)");
+
+            $('#content').css("background-image","url(White-Paper-Texture-Background-520x390.webp)");
+            $('#viewport').css("background-image","url(White-Paper-Texture-Background-520x390.webp)");
+
+            $('.web-body').css("background-color","#ffffff");
+
+            $('.file_icon').css("color","#5aa531");
+            $('.folder_icon').css("color","#d2cc14");
+
+
+            $('#toggle-button').prop("cheked",true);///必须要用这个设置选中状态，否则第二遍开关按钮会不起作用
+            // console.log(darkmode.isActivated()) // will return true
+
+            // console.log(darkmode.isActivated()) // will return true
+        }}
+    );
+
+
+    ///ready方法能正确地在页面加载后运行方法
+    $(document).ready(function ()
+    {
+        //-----↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓页面加载后隐藏操作按钮
+        $(".operation_button_area").hide();
+        //-----↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+        if($.cookie('select-folder')==null)
+            $.cookie('select-folder','false');
+
+        if($.cookie('select-folder')=='true')
+        {
+            $('#select-folder').show();
+            $('#upload_folder_checkbox').prop('checked',true);
+        }
+        else
+        {
+            $('#select-file').show();
+            $('#upload_folder_checkbox').prop('checked',false);
+        }
+
+
+        //-----↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓主题颜色切换时点击切换按钮后的动画过渡效果
+        if($.cookie('whitemode')=='true')
+        {
+            //  console.log(window.location.href);
+            $('.circle').addClass('disable_transition');
+            $('.web-body').addClass('disable_transition');
+            $('#sidebar').addClass('disable_transition');
+            $('#sidebar header').addClass('disable_transition');
+
+            $('.button-label').click();
+            $('.web-body').removeClass('disable_transition');
+            $('#sidebar').removeClass('disable_transition');
+            $('#sidebar header').removeClass('disable_transition');
+            $('.circle').removeClass('disable_transition');
+        }
+        //-----↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    });
+
+</script>
+
+</body>
+</html>

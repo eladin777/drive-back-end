@@ -1,0 +1,664 @@
+﻿
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>回收站</title>
+
+    <link rel="stylesheet" href="/css/buttons.css">
+
+    <!--    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/css/all.css" rel="stylesheet">-->
+
+    <!--    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">-->
+
+
+    <!--    <link rel="stylesheet" href="/css/jquery.fileupload-ui.css">-->
+    <!--    <link rel="stylesheet" href="/css/jquery.fileupload.css">-->
+    <!--    <script src="/js/vendor/jquery.ui.widget.js"></script>-->
+    <!--    <script src="/js/jquery.iframe-transport.js"></script>-->
+    <!--    <script src="/js/jquery.fileupload.js"></script>-->
+    <!--上传进度条-->
+
+
+    <!--固定框架-->
+    <link rel='stylesheet' href='/css/bootstrap.min.css'>
+
+    <!--图标库-->
+    <link rel='stylesheet' href='/css/material-design-iconic-font.min.css'>
+    <link rel="stylesheet" href="/css/fontawesome-free-6.0.0-web/css/all.css" >
+
+    <!--核心样式-->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!--    jquery-->
+    <script src="/jquery/jquery-3.6.0.js"></script>
+    <script src="/jquery/jquery.session.js"></script>
+    <script src="/jquery/jquery.cookie.js"></script>
+    <!--    jquery-->
+
+
+    <!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">-->
+
+    <!--    bootstrap图标-->
+    <link rel="stylesheet" href="/icons-1.8.1/font/bootstrap-icons.css">
+    <!--    bootstrap图标-->
+
+
+    <!--    viewer.js图片查看器-->
+    <link  href="/viewerjs-1.10.4/dist/viewer.css" rel="stylesheet">
+    <script src="/viewerjs-1.10.4/dist/viewer.js"></script>
+    <!--    viewer.js图片查看器-->
+
+
+    <!--    viideo.js视频查看器-->
+    <link href="/css/video-js.min.css" rel="stylesheet">
+    <script src="/jq/video.min.js"></script>
+    <!--    viideo.js视频查看器-->
+
+
+    <link rel="stylesheet" href="/malihu-custom-scrollbar-plugin-3.1.5/jquery.mCustomScrollbar.css" />
+    <script src="/malihu-custom-scrollbar-plugin-3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+</head>
+
+
+<!--不再用$(document).ready(function()-->
+<body class="web-body">
+
+<div id="viewport">
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <header>
+            <a href="/">我的网盘</a>
+        </header>
+        <ul class="nav">
+            <li>
+                <a href="/home">
+                    <i class="bi bi-file-earmark-fill" style="color: #6cdc78"></i> 所有文件
+                </a>
+            </li>
+            <li>
+                <a href="/my_share">
+                    <i class="bi bi-share-fill" style="color: #6cdc78"></i> 我的分享
+                </a>
+            </li>
+            <li>
+                <a href="/bin">
+                    <i class="bi bi-trash-fill" style="color: #6cdc78"></i> 回收站
+                </a>
+            </li>
+            <!--      <li>-->
+            <!--        <a href="#">-->
+            <!--          <i class="zmdi zmdi-calendar"></i> 账户管理-->
+            <!--        </a>-->
+            <!--      </li>-->
+
+        </ul>
+
+        </ul>
+    </div>
+
+    <!-- Content -->
+    <div id="content">
+        <!--   border: 0去边框   -->
+        <nav class="navbar navbar-default" id="topbar" style="border: 0;">
+            <div class="container-fluid" >
+
+                <ul style="float: left" class="nav navbar-nav navbar-left">
+                    <li>
+                        <a style="font-size: 25px;color: #16c421">回收站</a>
+                    </li>
+                </ul>
+
+                <ul style="float: left;margin-bottom: -10px;margin-top: -9px">
+                    <input th:value="${session.search_file_name}" type="text" class="name_class" id="search-bar" placeholder="在根目录搜索文件"> <a id="search-button" class="btn4 search" style="cursor: pointer"><i class="bi bi-search"></i></a>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+
+                    <li> <input type="checkbox" id="toggle-button">
+                        <!--label中的for跟input的id绑定。作用是在点击label时选中input或者取消选中input-->
+                        <label for="toggle-button" class="button-label">
+                            <span class="circle"></span>
+                            <span class="text on">白天</span>
+                            <span class="text off">黑夜</span>
+                        </label>
+                    </li>
+
+                    <!--          <li>-->
+                    <!--            <a href="#"><i class="zmdi zmdi-notifications text-danger"></i>-->
+                    <!--            </a>-->
+                    <!--          </li>-->
+                    <li><a href="#" style="color: #ffffff" th:text="${session.name}"></a></li><!-- 右上角显示用户名-->
+                    <li ><a style="color: #8b0cd0;font-family: Monospace;font-weight: 900;font-size: 20px"    href="#">VIP</a></li>
+                </ul>
+            </div>
+        </nav>
+
+<!--        <div class="container-fluid" >-->
+
+
+<!--            <button style="height:30px;width:100px;padding: 0" class="myButton" id="upload-button"><i  style="font-size: 17px" class="bi bi-cloud-arrow-up-fill"></i>   上传</button>-->
+
+<!--            <input style="display: none;font-size: 10px;height: 30px;width:350px;float: left;margin-right: 20px;margin-top: 10px;padding-top: -20px"  class="btn download" type="file"  id="select-file" name="file" multiple>-->
+<!--            <input style="display: none;font-size: 10px;height: 30px;width:350px;float: left;margin-right: 20px;margin-top: 10px;padding-top: -20px"  class="btn download" type="file"  id="select-folder" name="file"  webkitdirectory>-->
+
+<!--            <input id="upload_folder_checkbox" style="float: left;margin-top: 20px;margin-left: -10px" type="checkbox" class="single_checkbox">-->
+<!--            <span id="wen-jian-jia-shang-chuan" style="float: left;margin-top: 18px;margin-left:5px;color: #44e251;margin-right: 10px">文件夹上传</span>-->
+
+<!--            <div class="progress" style="margin-top: 15px;width: 30%;background-color: #565e56;float: left;display: none">-->
+<!--                <div id="progressBar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;background-color: #50f66d;box-shadow: 0px 0px 35px 5px #9af67f;overflow: visible">-->
+<!--                    0%-->
+<!--                </div>-->
+<!--                <span style="color: #49ff6e">上传中</span>-->
+<!--            </div>-->
+<!--            <span id="saving_span" style="color: #49ff6e;float: left;margin-top: 15px;margin-left: 10px;display: none">正在保存,请勿刷新</span>-->
+<!--            &lt;!&ndash;            <input th:text="文件夹" type="file" class="myButton" class="select-file" name="file" webkitdirectory >&ndash;&gt;-->
+<!--        </div>-->
+
+
+        <table class="fileTable">
+
+            <tr>
+                <td th:width="10" style="overflow: hidden" ><input id="first_checkbox" type="checkbox"></td>
+                <td th:width="15" class="table-td" ></td>
+                <td th:width="300" class="table-td" >名称 <i onclick="sort_by_name_desc()" th:if="${session.sort_by_name}=='asc'" style="cursor: pointer;margin-left: 6px;font-size: 20px" class="fas fa-sort"></i>  <i onclick="sort_by_name_asc()" th:if="${session.sort_by_name}=='desc'" style="cursor: pointer;margin-left: 6px;font-size: 20px" class="fas fa-sort"></i></td>
+                <td th:width="100" class="table-td" >大小    <i onclick="sort_by_size_desc()" th:if="${session.sort_by_size}=='asc'" style="cursor: pointer;margin-left: 6px;font-size: 20px" class="fas fa-sort"></i>  <i onclick="sort_by_size_asc()" th:if="${session.sort_by_size}=='desc'" style="cursor: pointer;margin-left: 6px;font-size: 20px" class="fas fa-sort"></i></td>
+                <td th:width="150" class="table-td" >修改日期    <i onclick="sort_by_time_desc()" th:if="${session.sort_by_time}=='asc'" style="cursor: pointer;margin-left: 6px;font-size: 20px" class="fas fa-sort"></i>  <i onclick="sort_by_time_asc()" th:if="${session.sort_by_time}=='desc'" style="cursor: pointer;margin-left: 6px;font-size: 20px" class="fas fa-sort"></i></td>
+                <td th:width="110" class="table-td" ></td>
+            </tr>
+
+
+            <!--↓↓↓↓↓↓↓↓↓↓↓↓↓文件夹显示区域   -->
+            <tr th:if="${folder_list!=null}" class="table_area"  th:each="f:${folder_list}" >
+
+                <td><input type="checkbox" class="single_checkbox"></td>
+                <td class="folder_icon"><i class="bi bi-folder-fill" ></i></td>
+
+                <!--            点击文件夹进入文件夹内，发送folder请求-->
+                <td ><a  class="table-td" th:text="${f.file_name}"   style="cursor: pointer"></a></td>
+
+                <td  class="operation_button_area">
+<!--                    <a th:href="'/download?fileName='+${f.file_name}" class="btn download" th:value="${f.file_name}"><i class="bi bi-download"></i></a>-->
+                    <button class="btn delete" id="delete"  th:onclick="move_to_recycle_bin([[${f.file_path}]],[[${f.file_name}]]);"><i class="bi bi-x-lg"></i></button>
+                    <a th:href="'/restore?file_name='+${f.file_name}+'&file_path='+${f.file_path}" class="btn arrow" th:value="${f.file_name}"><i class="bi bi-folder-symlink"></i></a>
+                    <!--            <td><button class="btn delete" id="delete"  th:onclick="move_to_recycle_bin([[${f.file_name}]]);"><i class="bi bi-trash"></i>回收站</button></td>-->
+                </td>
+
+                <td th:text="'-'" class="file_size_td"></td>
+                <td th:text="${f.create_time}" class="table-td"></td>
+
+            </tr>
+            <!--↑↑↑↑↑↑↑↑↑↑↑↑↑文件夹显示区域    -->
+
+
+
+            <tr class="table_area" th:each="file:${pageInfo.list}">
+                <td><input type="checkbox" class="single_checkbox"></td>
+                <!--        <td class="file_icon"><i class="bi bi-file-earmark-image"></i></td>-->
+
+                <!--↓↓↓↓↓↓↓↓↓↓↓↓↓  用thymeleaf判断文件类型，并根据类型显示文件图标  -->
+                <td class="file_icon" th:if="${file.suffix!='jpg' and file.suffix!='png' and file.suffix!='jpeg' and file.suffix!='bmp' and file.suffix!='png' and file.suffix!='gif' and file.suffix!='doc' and file.suffix!='docx' and file.suffix!='folder' and file.suffix!='txt' and file.suffix!='ini' and file.suffix!='xml'
+       and file.suffix!='mp3'and file.suffix!='wma'and file.suffix!='wav'and file.suffix!='ape'and file.suffix!='flac' and file.suffix!='mp4'and file.suffix!='mov'and file.suffix!='avi'and file.suffix!='flv'and file.suffix!='wmv'and file.suffix!='mpeg'and file.suffix!='mkv'
+       and file.suffix!='rar'and file.suffix!='zip'and file.suffix!='tar'and file.suffix!='7z'  }">
+                    <i class="bi bi-file-earmark" ></i>
+                </td>
+
+
+                <td class="file_icon"  th:if="${file.suffix=='jpg'||file.suffix=='png'||file.suffix=='jpeg'||file.suffix=='bmp'|| file.suffix=='png'||file.suffix=='gif'}"><i class="bi bi-image" ></i></td>
+
+                <td class="file_icon"  th:if="${file.suffix=='doc'||file.suffix=='docx'}"><i class="bi bi-file-earmark-word" ></i></td>
+
+                <td class="file_icon"  th:if="${file.suffix=='folder'}"><i class="bi bi-folder" ></i></td>
+
+                <td class="file_icon"  th:if="${file.suffix=='txt'||file.suffix=='ini'||file.suffix=='xml' }"><i class="bi bi-file-earmark-text" ></i></td>
+
+                <td class="file_icon"  th:if="${file.suffix=='mp3'||file.suffix=='wma'||file.suffix=='wav'||file.suffix=='ape'||file.suffix=='flac' }"><i class="bi bi-file-earmark-music"></i></td>
+
+                <td class="file_icon"  th:if="${file.suffix=='mp4'||file.suffix=='mov'||file.suffix=='avi'||file.suffix=='flv'||file.suffix=='wmv'||file.suffix=='mpeg'||file.suffix=='mkv'}"><i class="bi bi-file-earmark-play" ></i></td>
+
+                <td class="file_icon"  th:if="${file.suffix=='rar'||file.suffix=='zip'||file.suffix=='tar'||file.suffix=='7z'}"><i class="bi bi-file-earmark-zip-fill" ></i></td>
+                <!--↑↑↑↑↑↑↑↑↑↑↑↑↑    用thymeleaf判断文件类型，并根据类型显示文件图标-->
+
+
+                <!--↓↓↓↓↓↓↓↓↓↓↓↓↓ 非图片和视频时的文件名字样式 ,文件名显示 -->
+                <td th:if="${file.suffix!='jpg' and file.suffix!='png' and file.suffix!='jpeg'  and file.suffix!='bmp' and file.suffix!='png' and file.suffix!='gif' and file.suffix!='mp4' and file.suffix!='mov'and file.suffix!='avi' and file.suffix!='flv' and file.suffix!='wmv' and file.suffix!='mpeg' and file.suffix!='mkv'}" th:text="${file.file_name}" class="table-td" ></td>
+                <!--↑↑↑↑↑↑↑↑↑↑↑↑↑   -->
+
+
+                <td th:if="${file.suffix=='mp4'||file.suffix=='mov'||file.suffix=='avi'||file.suffix=='flv'|| file.suffix=='wmv'||file.suffix=='mpeg'||file.suffix=='mkv'}" ><a style="cursor: pointer" class="image-td"  target="_blank" th:href="'/video?video_path='+${file.file_path}+'&video_name='+${file.file_name}" th:text="${file.file_name}"></a></td>
+
+                <td th:if="${file.suffix=='jpg'||file.suffix=='png'||file.suffix=='jpeg'||file.suffix=='bmp'|| file.suffix=='png'||file.suffix=='gif'}" ><a style="cursor: pointer" class="image-td" th:onclick="view_image([[${file.file_name}]],[[${session.user_name}]]);" th:text="${file.file_name}"></a></td>
+
+
+
+                <!--↓↓↓↓↓↓↓↓↓↓↓↓↓  操作按钮区 -->
+                <td class="operation_button_area">
+                    <a th:href="'/download_in_recycle_bin?file_name='+${file.file_name}" class="btn download" th:value="${file.file_name}"><i class="bi bi-download"></i></a>
+                    <button class="btn delete" id="delete"  th:onclick="DeleteFile([[${file.file_name}]]);"><i class="bi bi-x-lg"></i></button>
+                    <a th:href="'/restore?file_name='+${file.file_name}+'&file_path='+${file.file_path}" class="btn arrow" ><i class="bi bi-folder-symlink"></i></a>
+                </td>
+                <!--↑↑↑↑↑↑↑↑↑↑↑↑↑   -->
+
+
+                <!--↓↓↓↓↓↓↓↓↓↓↓↓↓  显示文件大小和修改时间 -->
+                <td th:text="${file.file_size}+' kb'" class="file_size_td"></td>
+                <td th:text="${file.create_time}" class="table-td"></td>
+                <!--↑↑↑↑↑↑↑↑↑↑↑↑↑   -->
+
+            </tr>
+        </table>
+
+
+
+        <!--    该div为分页的页数显示与操作区域-->
+        <div class="Pagination">
+            <!--      <span th:text="'当前为第'+${pageInfo.pageNum}+'页'"></span>-->
+            <!--      <span th:text="'总共'+${pageInfo.pages}+'页'"></span>-->
+            <!--      th:if="${pageInfo.hasPreviousPage}"-->
+            <a class="btn arrow" th:href="'/bin?pageNum=1'" th:if="${pageInfo.hasPreviousPage==true}">首页</a>
+
+            <a class="btn arrow" th:href="'/bin?pageNum='+${pageInfo.prePage}" th:if="${pageInfo.hasPreviousPage==true}"><i class="fas fa-arrow-left"></i></a><!--      前一页          th:classappend="${pageInfo.hasPreviousPage==false}?'disable_click':''"-->
+
+            <li th:each="nav:${pageInfo.navigatepageNums}" class="pagination" style="display: inline-block" ><!--inline-block使li横向排列-->
+                <a class="btn arrow"  th:href="'/bin?pageNum='+${nav}" th:text="${nav}" th:if="${nav != pageInfo.pageNum}"></a>
+                <a id="get_cunrrent_pagenum" class="btn2 selected" th:value="10" th:href="'/bin?pageNum='+${nav}" th:text="${nav}" th:if="${nav == pageInfo.pageNum}" th:classappend="${nav == pageInfo.pageNum}?'disable_click':''"></a>
+            </li>
+
+            <a class="btn arrow" th:href="'/bin?pageNum='+${pageInfo.nextPage}" th:if="${pageInfo.hasNextPage==true}"><i class="fas fa-arrow-right"></i></a><!--      后一页           th:classappend="${pageInfo.hasNextPage==false}?'disable_click':''"-->
+
+            <a class="btn arrow" th:href="'/bin?pageNum='+${pageInfo.pages}" th:if="${pageInfo.hasNextPage==true}">尾页</a>
+        </div>
+
+
+
+    </div>
+
+    <div style="top: 97%;left:90%;height: 5%;width:10%;position: fixed;border: 2px solid #8ff38f;border-radius: 5px;text-align: center">
+        <!--    <span id="count" th:text="'共'+${pageInfo.total}+'个文件, '+${pageInfo.pages}+'页'"></span>&lt;!&ndash;    注意这里thymeleaf的文本连接语句语法&ndash;&gt;-->
+        <span id="count" style="font-size: 15px;color: #989393" th:text="'共'+${pageInfo.total}+'个文件,'+${pageInfo.pages}+'页'"></span>
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+
+    //-----↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓viewer.js图片浏览器
+    function view_image(file_name,user_name)
+    {
+        //使用虚拟路径打开文件（web的安全性限制）
+        var image = new Image();
+        image.src = '/rootFolder/'+user_name+'/Bin/'+file_name;
+        // console.log("加载图片"+image.src );
+        var viewer = new Viewer(image, {
+            hidden: function () {
+                viewer.destroy();
+            },
+        });
+        // image.click();
+        viewer.show();
+    }
+    //-----↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑viewer.js图片浏览器
+
+
+    function DeleteFile(filename)
+    {
+        var url=window.location.href;
+        $.ajax(
+            {
+                type:"GET",
+                url:"delete_file?file_name=" + filename,
+                dataType:"text",
+                success: function (data)
+                {
+                    window.location.href=url;////用ajax后端无法跳转页面，必须用ajax跳转
+                    // window.location.href='/home';////////////接收到的信息表示账户信息是正确的，则跳转页面,用ajax后端无法跳转页面，必须用ajax跳转
+                }
+            }
+        )
+    }
+
+
+    //-----↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓鼠标悬停时，显示对应行的操作按钮，注意实现方式
+    $(".table_area").each(function ()////each才能实现每一行实现此功能
+    {
+        $(this).mouseover(function ()
+        {
+            $(this).children(".operation_button_area").show();
+            $(this).children(".file_size_td").hide();
+
+        });
+    });
+
+    $(".table_area").each(function ()
+    {
+        $(this).mouseout(function ()
+        {
+            $(this).children(".operation_button_area").hide();
+            $(this).children(".file_size_td").show();
+        });
+    });
+    //-----↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+
+
+
+    // function play_video(file_name)
+    // {
+    //     $.ajax(
+    //         {
+    //             type:"GET",
+    //             url:"/video?videoName=" + file_name,
+    //             dataType:"text",
+    //             success: function (data)
+    //             {
+    //                 window.location.href='/video';////用ajax后端无法跳转页面，必须用ajax跳转
+    //                 // window.location.href='/home';////////////接收到的信息表示账户信息是正确的，则跳转页面,用ajax后端无法跳转页面，必须用ajax跳转
+    //             }
+    //         }
+    //     )
+    // }
+
+    $("#first_checkbox").change(function ()
+    {
+        if(this.checked)
+        {$(".single_checkbox ").each(function ()
+        {
+            this.checked=true;
+        });}
+        else
+        {$(".single_checkbox").each(function ()
+        {
+            this.checked=false;
+        });}
+    });
+
+    $('#search-button').click(function ()
+    {
+        var file_name=$('#search-bar').val();
+        $.ajax(
+            {
+                type:"GET",
+                url:"search?file_name="+file_name,
+                dataType:"text",
+                success: function (data)
+                {
+                    window.location.href='/search_result';
+                }
+            }
+        )
+    });
+
+
+    $('.button-label').click(function () {
+        if($('#toggle-button').prop('cheked'))//这个表示黑暗模式关闭
+        {
+
+            $.cookie('whitemode','false');
+
+            $('#content').css("background-image","url()");
+            $('#content').css("background-color","#1c1b1b");
+            $('.web-body').css("background-color","#1c1b1b");////滚动条背景色需从白色设置为主题色
+
+            $('.table-td').css("color","#989393");
+            $('.file_size_td').css("color","#989393");
+
+            $('.image-td').css("color","#569838");
+
+            $('#count').css("color","#989393");
+
+
+
+            //顶栏
+            $('#topbar').css("background-image","url()");
+            $('#topbar').css("background-color","#1c1b1b")
+
+
+            $('.file_icon').css("color","#58dc0f")
+            $('.folder_icon').css("color","#e7ef2b")
+
+
+
+            $('#sidebar').css("background-image","url()");
+            $('#sidebar').css("background-color","#262626")
+
+
+
+            $('#sidebar header').css("background-image","url()");
+            $('#sidebar header').css("background-color","#262626")
+
+
+
+            $('#toggle-button').prop("cheked",false);//必须要用这个设置选中状态，否则第二遍开关按钮会不起作用
+
+        }
+        else ///这个表示黑暗模式开启
+        {
+            $.cookie('whitemode','true');
+            $('.table-td').css("color","black");
+            $('.file_size_td').css("color","black");
+            $('.image-td').css("color","#59b730");
+            $('#count').css("color","black");
+
+            //顶栏
+            // $('#topbar').css("background-color","#ffffff");
+            $('#topbar').css("background-image","url(White-Paper-Texture-Background-520x390.webp)");
+
+            // $('#sidebar').css("background-color","#fdfdfd");
+            $('#sidebar').css("background-image","url(White-Paper-Texture-Background-520x390.webp)");
+
+
+            // $('#sidebar header').css("background-color","#ffffff");
+            $('#sidebar header').css("background-image","url(White-Paper-Texture-Background-520x390.webp)");
+
+            $('#content').css("background-image","url(White-Paper-Texture-Background-520x390.webp)");
+            $('#viewport').css("background-image","url(White-Paper-Texture-Background-520x390.webp)");
+
+            $('.web-body').css("background-color","#ffffff");
+
+            $('.file_icon').css("color","#5aa531");
+            $('.folder_icon').css("color","#d2cc14");
+
+
+            $('#toggle-button').prop("cheked",true);///必须要用这个设置选中状态，否则第二遍开关按钮会不起作用
+            // console.log(darkmode.isActivated()) // will return true
+
+            // console.log(darkmode.isActivated()) // will return true
+        }}
+    );
+
+
+    function enter_folder(folder_name)
+    {
+        //th:href="'/folder?folder_name='+${f.file_name}"
+        // var path=$.session.get('Current_Path');
+        // path=path+filename+"/";
+        // $.session.set('Current_Path',path);
+        //console.log("path");
+
+
+
+
+        $.session.set('next_folder','jdk');
+        window.location.href="/folder?folder_name="+folder_name;
+    }
+
+    function move_to_recycle_bin(file_path,file_name)
+    {
+        var url=window.location.href;
+        $.ajax(
+            {
+                type:"GET",
+                url:"move_to_recycle_bin?file_path=" + file_path+"&file_name="+file_name,
+                dataType:"text",
+                success: function (data)
+                {
+                    window.location.href=url;////用ajax后端无法跳转页面，必须用ajax跳转
+                    // window.location.href='/home';////////////接收到的信息表示账户信息是正确的，则跳转页面,用ajax后端无法跳转页面，必须用ajax跳转
+                }
+            }
+        )
+    }
+
+
+    $('#upload_folder_checkbox').click(function ()
+    {
+        if($('#upload_folder_checkbox').prop('checked')==true)
+        {
+            $.cookie('select-folder','true');
+            location.reload();
+        }
+        else
+        {
+            $.cookie('select-folder', 'false');
+            location.reload();
+        }
+    });
+
+
+    $('#upload-button').click(function ()/////important这个为上传文件的ajax方法，用ajax只能ajax进行页面跳转，后端无效
+    {
+        // var formData = new FormData();
+        //   formData.append("file", $("#select-file")[0].files[0]);
+        //   var formData=new FormData($("#select-file-form"[0]));
+        if ($.cookie('select-folder')=='true')
+        {
+            $('.progress').show();
+            $('#upload_folder_checkbox').hide();
+            $('#wen-jian-jia-shang-chuan').hide();
+            event.preventDefault();
+            var formData = new FormData();
+            var file=$('#select-folder')[0].files;//////////////////important！！这里是#select-folder
+            for(var i=0;i<file.length;i++)
+            {
+                formData.append("file",file[i]);
+            }
+            var url=window.location.href;
+            $.ajax({
+                xhr : function() {
+                    var xhr = new window.XMLHttpRequest();
+
+                    xhr.upload.addEventListener('progress', function(e) {
+
+                        if (e.lengthComputable) {
+                            console.log('Bytes Loaded: ' + e.loaded);
+                            console.log('Total Size: ' + e.total);
+                            console.log('Percentage Uploaded: ' + (e.loaded / e.total))
+                            var percent = Math.round((e.loaded / e.total) * 100);
+                            if(percent==100)
+                                $('#saving_span').show();
+                            $('#progressBar').attr('aria-valuenow', percent).css({"width": percent + "%","color":"#8d2cea","font-size":"12px","font-weight":"bold"}).text(percent + '%');
+                        }
+                    });
+                    return xhr;
+                },
+                type: "POST",
+                url: '/upload',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data)
+                {
+                    // var num=$('#get_cunrrent_pagenum').val();
+                    // '/home?pageNum='+num
+                    window.location.href=url;////用ajax后端无法跳转页面，必须用ajax跳转
+                }
+            })
+        }
+        else if($.cookie('select-folder')=='false')
+        {
+            $('.progress').show();
+            $('#upload_folder_checkbox').hide();
+            $('#wen-jian-jia-shang-chuan').hide();
+            event.preventDefault();
+            var formData = new FormData();
+            var file=$('#select-file')[0].files;
+            for(var i=0;i<file.length;i++)
+            {
+                formData.append("file",file[i]);
+            }
+
+            var url=window.location.href;
+
+            console.log(formData);
+            $.ajax({
+                xhr : function() {
+                    var xhr = new window.XMLHttpRequest();
+
+                    xhr.upload.addEventListener('progress', function(e) {
+
+                        if (e.lengthComputable) {
+                            console.log('Bytes Loaded: ' + e.loaded);
+                            console.log('Total Size: ' + e.total);
+                            console.log('Percentage Uploaded: ' + (e.loaded / e.total))
+                            var percent = Math.round((e.loaded / e.total) * 100);
+                            if(percent==100)
+                                $('#saving_span').show();
+                            $('#progressBar').attr('aria-valuenow', percent).css({"width": percent + "%","color":"#8d2cea","font-size":"12px","font-weight":"bold"}).text(percent + '%');
+                        }
+                    });
+                    return xhr;
+                },
+                type: "POST",
+                url: '/upload',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data)
+                {
+                    // var num=$('#get_cunrrent_pagenum').val();
+                    // '/home?pageNum='+num
+                    window.location.href=url;////用ajax后端无法跳转页面，必须用ajax跳转
+
+                }
+            })
+        }
+    });
+
+    ///ready方法能正确地在页面加载后运行方法
+    $(document).ready(function ()
+    {
+        //-----↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓页面加载后隐藏操作按钮
+        $(".operation_button_area").hide();
+        //-----↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+        if($.cookie('select-folder')==null)
+            $.cookie('select-folder','false');
+
+        if($.cookie('select-folder')=='true')
+        {
+            $('#select-folder').show();
+            $('#upload_folder_checkbox').prop('checked',true);
+        }
+        else
+        {
+            $('#select-file').show();
+            $('#upload_folder_checkbox').prop('checked',false);
+        }
+
+
+        //-----↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓主题颜色切换时点击切换按钮后的动画过渡效果
+        if($.cookie('whitemode')=='true')
+        {
+            //  console.log(window.location.href);
+            $('.circle').addClass('disable_transition');
+            $('.web-body').addClass('disable_transition');
+            $('#sidebar').addClass('disable_transition');
+            $('#sidebar header').addClass('disable_transition');
+
+            $('.button-label').click();
+            $('.web-body').removeClass('disable_transition');
+            $('#sidebar').removeClass('disable_transition');
+            $('#sidebar header').removeClass('disable_transition');
+            $('.circle').removeClass('disable_transition');
+        }
+        //-----↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    });
+
+
+</script>
+
+</body>
+</html>

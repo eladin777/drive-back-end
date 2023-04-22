@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- namespace为命名空间，应该是mapper接口的全称-->
+<mapper namespace="com.loivgehoto.disk.Mapper.FileMapper">
+
+
+
+    <!--    将文件移至回收站-->
+    <select id="move_file_to_recycle_bin">
+        INSERT INTO bin (user_name,file_name,source_file_path) VALUES(#{user_name},#{file_name},#{source_file_path});
+    </select>
+
+    <select id="delete_file_completely">
+        DELETE from bin where file_name=#{file_name} and user_name=#{user_name};
+    </select>
+
+    <select id="restore_file_get_file_source_path" resultType="String">
+        select source_file_path from bin where file_name=#{file_name} and user_name=#{user_name};
+    </select>
+
+    <select id="save_shared_file" >
+        INSERT INTO share (user_name, file_name, file_path, uuid, file_size, create_time, suffix,password) VALUES(#{user_name},#{file_name},#{file_path},#{uuid},#{file_size},#{create_time},#{suffix},#{password});
+    </select>
+
+
+
+    <resultMap id="BaseResultMap" type="com.loivgehoto.disk.Model.Shared">
+        <result column="file_name" property="file_name" />
+        <result column="file_path" property="file_path"/>
+        <!--        <result column="uuid" property="uuid" />-->
+        <result column="file_size" property="file_size"/>
+        <result column="user_name" property="user_name"/>
+        <!--        <result column="suffix" property="suffix" />-->
+        <result column="create_time" property="create_time"/>
+        <result column="suffix" property="suffix" />
+        <result column="password" property="password" />
+    </resultMap>
+
+    <select id="shared_page" resultMap="BaseResultMap">
+        select * from share  where  uuid = #{uuid};
+    </select>
+
+    <select id="check_share_password" resultMap="BaseResultMap">
+        select * from share  where  uuid = #{uuid} and password=#{password};
+    </select>
+    <select id="check_share_password_is_exit" resultType="String">
+        select password from share  where  uuid = #{uuid};
+    </select>
+
+
+    <select id="share_management_page" resultMap="BaseResultMap">
+        select * from share  where  user_name = #{user_name};
+    </select>
+
+    <select id="cancel_share">
+        DELETE from share  where file_path = #{file_path};
+    </select>
+
+<!--    &lt;!&ndash;    验证账户是否正确&ndash;&gt;-->
+<!--    <select id="addFile">&lt;!&ndash;当上传一个新的文件和回收站里的文件重名,要怎么处理,待解决 INSERT INTO cloud_disk.file (file_id,file_name,file_path,create_time,file_size,user_name,suffix_name,in_folder) VALUES(#{file_id},#{file_name},#{file_path},#{create_time},#{file_size},#{user_name},#{suffix_name},#{in_folder})&ndash;&gt;-->
+<!--        INSERT INTO cloud_disk.file (file_name,create_time,file_size,user_name,suffix_name) VALUES(#{file_name},#{create_time},#{file_size},#{user_name},#{suffix_name})-->
+<!--    </select>-->
+
+
+<!--    <select id="SearchAllFile_by_name_asc" resultType="com.loivgehoto.disk.Model.File">&lt;!&ndash;    order by file_name按文件名称对文件进行排序&ndash;&gt;-->
+<!--        select  * from file where user_name=#{name} and in_recycle_bin=0 order by file_name asc-->
+<!--    </select>-->
+
+
+<!--    <select id="SearchAllFile_by_name_desc" resultType="com.loivgehoto.disk.Model.File">-->
+<!--        select  * from file where user_name=#{name} and in_recycle_bin=0 order by file_name desc-->
+<!--    </select>-->
+
+
+<!--    <select id="SearchAllFile_by_size_asc" resultType="com.loivgehoto.disk.Model.File">&lt;!&ndash;    order by file_name按文件大小对文件进行排序&ndash;&gt;-->
+<!--        select  * from file where user_name=#{name} and in_recycle_bin=0 order by file_size asc-->
+<!--    </select>-->
+
+
+<!--    <select id="SearchAllFile_by_size_desc" resultType="com.loivgehoto.disk.Model.File">-->
+<!--        select  * from file where user_name=#{name} and in_recycle_bin=0 order by file_size desc-->
+<!--    </select>-->
+
+<!--    <select id="SearchAllFile_by_time_asc" resultType="com.loivgehoto.disk.Model.File">&lt;!&ndash;    order by file_name按文件大小对文件进行排序&ndash;&gt;-->
+<!--        select  * from file where user_name=#{name} and in_recycle_bin=0 order by create_time asc-->
+<!--    </select>-->
+
+
+<!--    <select id="SearchAllFile_by_time_desc" resultType="com.loivgehoto.disk.Model.File">-->
+<!--        select  * from file where user_name=#{name} and in_recycle_bin=0 order by create_time desc-->
+<!--    </select>-->
+
+<!--    <select id="Return_Search_Result" resultType="com.loivgehoto.disk.Model.File">-->
+<!--        select  * from file where file_name like concat('%',#{file_name},'%') and user_name=#{user_name}-->
+<!--    </select>-->
+
+
+
+    <select id="delete_file" parameterType="String"><!--删除文件记录的指令，只会删除在回收站当中的，in_recycle_bin判断是否在回收站，显示所有文件的页面的文件删除按钮不会触发这个指令，只有回收站页面的删除会-->
+        DELETE from bin where file_name=#{file_name} and user_name=#{user_name}
+    </select>
+
+
+
+<!--    <select id="findPath" parameterType="String">-->
+<!--        select  * from file where user_name=#{name} and in_recycle_bin=1-->
+<!--&lt;!&ndash;    </select>&ndash;&gt; update file set in_recycle_bin=1 where file_name=#{file_name};-->
+
+
+
+
+
+    <!--    将文件夹移至回收站-->
+    <select id="From_rootFolder_to_recycle_bin_folder" >
+        INSERT INTO bin (file_name,user_name,file_path,file_suffix,create_time) VALUES(#{file_name},#{user_name},#{file_path},#{file_suffix},#{create_time});
+    </select>
+
+
+
+    <select id="SearchAllFile_in_recycle_bin" resultType="com.loivgehoto.disk.Model.File"><!--    order by file_name按文件名称对文件进行排序-->
+        select  * from bin where user_name=#{user_name} and file_suffix!='folder'
+    </select>
+
+    <select id="SearchAllFolder_in_recycle_bin" resultType="com.loivgehoto.disk.Model.File"><!--    order by file_name按文件名称对文件进行排序-->
+        select  * from bin where user_name=#{user_name} and file_suffix='folder'
+    </select>
+
+
+
+
+
+
+
+    <select id="From_recycle_bin_to_rootFolder" ><!--当上传一个新的文件和回收站里的文件重名,要怎么处理,待解决-->
+        update file set in_recycle_bin=0 where file_name=#{file_name};
+    </select>
+
+
+
+    <select id="share">
+        insert into share_file (file_name,user_name,file_path,share_url,file_size,create_time,file_suffix) value (#{file_name},#{user_name},#{file_path},#{share_url},#{file_size},#{create_time},#{file_suffix});
+    </select>
+    <select id="share_folder">
+        insert into share_file (file_name,user_name,file_path,share_url,file_size,create_time,file_suffix) value (#{file_name},#{user_name},#{file_path},#{share_url},0,#{create_time},#{file_suffix});
+    </select>
+
+
+    <select id="cancel_share" >
+        DELETE from share_file where share_url=#{share_url}
+    </select>
+
+
+
+<!--    去掉order by，否则pagehelper错误-->
+    <select id="SearchAllFile_shared" resultType="com.loivgehoto.disk.Model.File">
+        select  * from share_file where user_name=#{user_name}
+    </select>
+
+    <select id="SearchSingleFile_shared" resultType="com.loivgehoto.disk.Model.File">
+        select  * from share_file where share_url=#{share_url}
+    </select>
+
+</mapper>

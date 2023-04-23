@@ -14,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -173,13 +175,15 @@ public class FileController {
     //-----↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓分享动作
     @GetMapping("/share_file")
     @ResponseBody
-    public Shared share_file(com.loivgehoto.disk.Model.File file, Boolean use_password, String user_name)
-    {
+    public Shared share_file(com.loivgehoto.disk.Model.File file, Boolean use_password, String user_name) throws UnsupportedEncodingException {
         String uuid=UUID();
         String password=null;
         if (use_password)
             password=getRandomString();
-        fileService.save_shared_file(user_name, file.getFile_name(), file.getFile_path(),uuid, file.getFile_size(), file.getCreate_time(),file.getSuffix(),password);
+
+        String path=URLDecoder.decode(file.getFile_path(),"UTF-8");
+
+        fileService.save_shared_file(user_name, file.getFile_name(), path,uuid, file.getFile_size(), file.getCreate_time(),file.getSuffix(),password);
 
         Shared s=new Shared();
         s.setPassword(password);
@@ -246,11 +250,14 @@ public class FileController {
 
     }
 
-
     @GetMapping("/cancel_share")
     @ResponseBody
     public void cancel_share(String file_path)
     {
+        System.out.println("cancel!!!!");
+
+//        file_path= URLEncoder.encode(file_path, StandardCharsets.UTF_8);
+        System.out.println(file_path);
         fileService.cancel_share(file_path);
     }
     //-----↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑分享动作
@@ -686,7 +693,6 @@ public class FileController {
             delete_folder(file);
         }
        fileService.delete_file_completely(file_name,user_name);
-
     }
     @GetMapping("/delete_multi_files_completely")
     @ResponseBody

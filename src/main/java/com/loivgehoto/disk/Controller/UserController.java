@@ -837,13 +837,13 @@ public class UserController
 //    //-----↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑分享动作
 
 
-    @RequestMapping("/cancel_share")
-    @ResponseBody
-    public void cancel_share(@RequestParam("share_url")String share_url)
-    {
-        FileService service=new FileService();
-        service.cancel_share(share_url);
-    }
+//    @RequestMapping("/cancel_share")
+//    @ResponseBody
+//    public void cancel_share(@RequestParam("share_url")String share_url)
+//    {
+//        FileService service=new FileService();
+//        service.cancel_share(share_url);
+//    }
 
 
 
